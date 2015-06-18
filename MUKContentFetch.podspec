@@ -1,0 +1,15 @@
+Pod::Spec.new do |s|
+  s.name             = "MUKContentFetch"
+  s.version          = "1.0.0"
+  s.summary          = "Retrieve data and transform it to content objects"
+  s.description      = "Retrieve data and transform it to content objects"
+  s.homepage         = "https://github.com/muccy/MUKContentFetch"
+  s.license          = 'MIT'
+  s.author           = { "Marco Muccinelli" => "muccymac@gmail.com" }
+  s.source           = { :git => "https://github.com/muccy/MUKContentFetch.git", :tag => s.version.to_s }
+
+  s.platform     = :ios, '7.0'
+  s.requires_arc = true
+
+  s.source_files = '*.{h,m}'
+end
