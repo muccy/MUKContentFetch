@@ -1,11 +1,3 @@
-//
-//  MUKContentFetchResponse.m
-//  
-//
-//  Created by Marco on 18/06/15.
-//
-//
-
 #import "MUKContentFetchResponse.h"
 
 @implementation MUKContentFetchResponse

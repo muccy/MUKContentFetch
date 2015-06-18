@@ -1,11 +1,3 @@
-//
-//  MUKContentFetchRequest.m
-//  
-//
-//  Created by Marco on 18/06/15.
-//
-//
-
 #import "MUKContentFetchRequest.h"
 
 NSString *const MUKContentFetchRequestIntentUserInfoKey     = @"MUKContentFetchRequestIntentUserInfoKey";
