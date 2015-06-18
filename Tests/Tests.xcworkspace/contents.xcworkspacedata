@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workspace
    version = "1.0">
+   <Group
+      location = "container:"
+      name = "Pod">
+      <FileRef
+         location = "group:../MUKContentFetchRequest.h">
+      </FileRef>
+      <FileRef
+         location = "group:../MUKContentFetchRequest.m">
+      </FileRef>
+      <FileRef
+         location = "group:../MUKContentFetch.h">
+      </FileRef>
+      <FileRef
+         location = "group:../MUKContentFetch.m">
+      </FileRef>
+      <FileRef
+         location = "group:../MUKContentFetchResponse.h">
+      </FileRef>
+      <FileRef
+         location = "group:../MUKContentFetchResponse.m">
+      </FileRef>
+   </Group>
    <FileRef
       location = "group:Tests.xcodeproj">
    </FileRef>
