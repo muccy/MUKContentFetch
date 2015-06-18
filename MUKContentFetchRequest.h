@@ -20,4 +20,5 @@ extern NSString *const MUKContentFetchRequestIntentPrepend;
 @interface MUKContentFetchRequest : NSObject
 @property (nonatomic, copy, readonly) NSDictionary *userInfo;
 - (instancetype)initWithUserInfo:(NSDictionary *)userInfo;
+- (BOOL)isEqualToContentFetchRequest:(MUKContentFetchRequest *)request;
 @end

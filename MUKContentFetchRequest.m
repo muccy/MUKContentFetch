@@ -27,4 +27,27 @@ NSString *const MUKContentFetchRequestIntentPrepend     = @"MUKContentFetchReque
     return self;
 }
 
+- (BOOL)isEqualToContentFetchRequest:(MUKContentFetchRequest *)request {
+    BOOL const sameUserInfo = (!self.userInfo && !request.userInfo) || [self.userInfo isEqualToDictionary:request.userInfo];
+    return sameUserInfo;
+}
+
+#pragma mark - Overrides
+
+- (BOOL)isEqual:(id)object {
+    if (self == object) {
+        return YES;
+    }
+    
+    if ([object isKindOfClass:[self class]]) {
+        return [self isEqualToContentFetchRequest:object];
+    }
+    
+    return NO;
+}
+
+- (NSUInteger)hash {
+    return 1838 ^ [self.userInfo hash];
+}
+
 @end

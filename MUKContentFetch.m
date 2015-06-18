@@ -39,7 +39,7 @@
                     [self transformRetrievedObject:retrievedObject withCompletionHandler:^(id transformedObject, NSError *error)
                     {
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [strongSelf setResponseAndCallCompletionHandlerIfNeeded:[[MUKContentFetchResponse alloc] initWithType:MUKContentFetchResponseTypeSuccess fetchedObject:transformedObject error:error]];
+                            [strongSelf setResponseAndCallCompletionHandlerIfNeeded:[[MUKContentFetchResponse alloc] initWithType:MUKContentFetchResponseTypeSuccess object:transformedObject error:error]];
                         }); // dispatch_async
                     }]; // transformRetrievedObject
                     
@@ -47,12 +47,12 @@
                 }
                     
                 case MUKContentFetchRetrieveResultTypeFailed: {
-                    [strongSelf setResponseAndCallCompletionHandlerIfNeeded:[[MUKContentFetchResponse alloc] initWithType:MUKContentFetchResponseTypeFailed fetchedObject:nil error:error]];
+                    [strongSelf setResponseAndCallCompletionHandlerIfNeeded:[[MUKContentFetchResponse alloc] initWithType:MUKContentFetchResponseTypeFailed object:nil error:error]];
                     break;
                 }
                     
                 case MUKContentFetchRetrieveResultTypeCancelled: {
-                    [strongSelf setResponseAndCallCompletionHandlerIfNeeded:[[MUKContentFetchResponse alloc] initWithType:MUKContentFetchResponseTypeCancelled fetchedObject:nil error:error]];
+                    [strongSelf setResponseAndCallCompletionHandlerIfNeeded:[[MUKContentFetchResponse alloc] initWithType:MUKContentFetchResponseTypeCancelled object:nil error:error]];
                     break;
                 }
                     
@@ -64,7 +64,7 @@
 }
 
 - (void)cancel {
-    [self setResponseAndCallCompletionHandlerIfNeeded:[[MUKContentFetchResponse alloc] initWithType:MUKContentFetchResponseTypeCancelled fetchedObject:nil error:nil]];
+    [self setResponseAndCallCompletionHandlerIfNeeded:[[MUKContentFetchResponse alloc] initWithType:MUKContentFetchResponseTypeCancelled object:nil error:nil]];
 }
 
 - (void)retrieveResourceWithCompletionHandler:(void (^)(MUKContentFetchRetrieveResultType, id, NSError *))completionHandler

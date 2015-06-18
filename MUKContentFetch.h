@@ -28,5 +28,5 @@ typedef NS_ENUM(NSInteger, MUKContentFetchRetrieveResultType) {
 
 @interface MUKContentFetch (MethodsToOverride)
 - (void)retrieveResourceWithCompletionHandler:(void (^)(MUKContentFetchRetrieveResultType resultType, id retrievedObject, NSError *error))completionHandler;
-- (void)transformRetrievedObject:(id)retrievedObject withCompletionHandler:(void (^)(id, NSError *))completionHandler;
+- (void)transformRetrievedObject:(id)retrievedObject withCompletionHandler:(void (^)(id transformedObject, NSError *error))completionHandler;
 @end

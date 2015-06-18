@@ -16,7 +16,8 @@ typedef NS_ENUM(NSInteger, MUKContentFetchResponseType) {
 
 @interface MUKContentFetchResponse : NSObject
 @property (nonatomic, readonly) MUKContentFetchResponseType type;
-@property (nonatomic, readonly) id fetchedObject;
+@property (nonatomic, readonly) id object;
 @property (nonatomic, readonly) NSError *error;
-- (instancetype)initWithType:(MUKContentFetchResponseType)type fetchedObject:(id)fetchedObject error:(NSError *)error;
+- (instancetype)initWithType:(MUKContentFetchResponseType)type object:(id)object error:(NSError *)error;
+- (BOOL)isEqualToContentFetchResponse:(MUKContentFetchResponse *)response;
 @end
