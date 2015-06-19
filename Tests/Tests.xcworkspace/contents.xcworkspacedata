@@ -22,6 +22,9 @@
       <FileRef
          location = "group:../MUKContentFetchResponse.m">
       </FileRef>
+      <FileRef
+         location = "group:../MUKContentFetchResultType.h">
+      </FileRef>
    </Group>
    <FileRef
       location = "group:Tests.xcodeproj">

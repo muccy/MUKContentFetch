@@ -1,22 +1,5 @@
 #import <Foundation/Foundation.h>
-
-/**
- Response result type
- */
-typedef NS_ENUM(NSInteger, MUKContentFetchResponseType) {
-    /**
-     Fetch failed
-     */
-    MUKContentFetchResponseTypeFailed       = 0,
-    /**
-     Fetch success
-     */
-    MUKContentFetchResponseTypeSuccess      = 1,
-    /**
-     Fetch cancelled
-     */
-    MUKContentFetchResponseTypeCancelled    = 2
-};
+#import <MUKContentFetch/MUKContentFetchResultType.h>
 
 /**
  Result of a fetch
@@ -25,7 +8,7 @@ typedef NS_ENUM(NSInteger, MUKContentFetchResponseType) {
 /**
  Result type
  */
-@property (nonatomic, readonly) MUKContentFetchResponseType type;
+@property (nonatomic, readonly) MUKContentFetchResultType resultType;
 /**
  Fetched object
  */
@@ -37,7 +20,7 @@ typedef NS_ENUM(NSInteger, MUKContentFetchResponseType) {
 /**
  Designated initializer
  */
-- (instancetype)initWithType:(MUKContentFetchResponseType)type object:(id)object error:(NSError *)error;
+- (instancetype)initWithResultType:(MUKContentFetchResultType)resultType object:(id)object error:(NSError *)error;
 /**
  @returns YES when response is equal to self
  */

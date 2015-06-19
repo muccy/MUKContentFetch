@@ -28,17 +28,17 @@
     return self;
 }
 
-- (void)retrieveResourceWithCompletionHandler:(void (^)(MUKContentFetchStepResultType, id, NSError *))completionHandler
+- (void)retrieveResourceWithCompletionHandler:(void (^)(MUKContentFetchResultType, id, NSError *))completionHandler
 {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retrieveTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        completionHandler(MUKContentFetchStepResultTypeSuccess, nil, nil);
+        completionHandler(MUKContentFetchResultTypeSuccess, nil, nil);
     });
 }
 
-- (void)transformRetrievedObject:(id)retrievedObject withCompletionHandler:(void (^)(MUKContentFetchStepResultType, id, NSError *))completionHandler
+- (void)transformRetrievedObject:(id)retrievedObject withCompletionHandler:(void (^)(MUKContentFetchResultType, id, NSError *))completionHandler
 {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.transformTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        completionHandler(MUKContentFetchStepResultTypeSuccess, nil, nil);
+        completionHandler(MUKContentFetchResultTypeSuccess, nil, nil);
     });
 }
 
@@ -47,17 +47,17 @@
 #pragma mark -
 
 @interface SyncFetch : MUKContentFetch
-@property (nonatomic, readonly) MUKContentFetchStepResultType retrieveResultType, transformResultType;
+@property (nonatomic, readonly) MUKContentFetchResultType retrieveResultType, transformResultType;
 @property (nonatomic, readonly) id retrievedObject, transformedObject;
 @property (nonatomic, readonly) NSError *retrieveError, *transformError;
 @property (nonatomic, readonly) BOOL retrieveAttempted, transformAttempted;
 
-- (instancetype)initWithRetrieveResultType:(MUKContentFetchStepResultType)retrieveResultType object:(id)retrievedObject error:(NSError *)retrieveError transformResultType:(MUKContentFetchStepResultType)transformResultType object:(id)transformedObject error:(NSError *)transformError;
+- (instancetype)initWithRetrieveResultType:(MUKContentFetchResultType)retrieveResultType object:(id)retrievedObject error:(NSError *)retrieveError transformResultType:(MUKContentFetchResultType)transformResultType object:(id)transformedObject error:(NSError *)transformError;
 @end
 
 @implementation SyncFetch
 
-- (instancetype)initWithRetrieveResultType:(MUKContentFetchStepResultType)retrieveResultType object:(id)retrievedObject error:(NSError *)retrieveError transformResultType:(MUKContentFetchStepResultType)transformResultType object:(id)transformedObject error:(NSError *)transformError
+- (instancetype)initWithRetrieveResultType:(MUKContentFetchResultType)retrieveResultType object:(id)retrievedObject error:(NSError *)retrieveError transformResultType:(MUKContentFetchResultType)transformResultType object:(id)transformedObject error:(NSError *)transformError
 {
     self = [super init];
     if (self) {
@@ -73,13 +73,13 @@
     return self;
 }
 
-- (void)retrieveResourceWithCompletionHandler:(void (^)(MUKContentFetchStepResultType, id, NSError *))completionHandler
+- (void)retrieveResourceWithCompletionHandler:(void (^)(MUKContentFetchResultType, id, NSError *))completionHandler
 {
     _retrieveAttempted = YES;
     completionHandler(self.retrieveResultType, self.retrievedObject, self.retrieveError);
 }
 
-- (void)transformRetrievedObject:(id)retrievedObject withCompletionHandler:(void (^)(MUKContentFetchStepResultType, id, NSError *))completionHandler
+- (void)transformRetrievedObject:(id)retrievedObject withCompletionHandler:(void (^)(MUKContentFetchResultType, id, NSError *))completionHandler
 {
     _transformAttempted = YES;
     completionHandler(self.transformResultType, self.transformedObject, self.transformError);
@@ -99,11 +99,15 @@
     MUKContentFetch *fetch = [[MUKContentFetch alloc] initWithRequest:request];
     XCTAssertEqualObjects(fetch.request, request);
     XCTAssertNil(fetch.response);
-    
+    XCTAssertFalse(fetch.isStarted);
+    XCTAssertFalse(fetch.isCancelled);
+
     request = [[MUKContentFetchRequest alloc] initWithUserInfo:nil];
     fetch = [[MUKContentFetch alloc] init];
     XCTAssertEqualObjects(fetch.request, request);
     XCTAssertNil(fetch.response);
+    XCTAssertFalse(fetch.isStarted);
+    XCTAssertFalse(fetch.isCancelled);
 }
 
 - (void)testEarlyCancellation {
@@ -111,6 +115,7 @@
     XCTAssertFalse(fetch.isStarted);
     XCTAssertNoThrow([fetch cancel]);
     XCTAssertNil(fetch.response);
+    XCTAssertFalse(fetch.isCancelled);
 }
 
 - (void)testStart {
@@ -127,6 +132,7 @@
     }];
     
     XCTAssertTrue(fetch.isStarted);
+    XCTAssertFalse(fetch.isCancelled);
     
     [self waitForExpectationsWithTimeout:(fetch.retrieveTimeout + fetch.transformTimeout) * 2.0 handler:nil];
 }
@@ -137,15 +143,17 @@
     XCTestExpectation *completionHandlerExpection = [self expectationWithDescription:@"Completion handler called"];
     
     [fetch startWithCompletionHandler:^(MUKContentFetchResponse *response) {
-        XCTAssertEqual(response.type, MUKContentFetchResponseTypeCancelled);
+        XCTAssertEqual(response.resultType, MUKContentFetchResultTypeCancelled);
         [completionHandlerExpection fulfill];
     }];
     
     XCTAssertTrue(fetch.isStarted);
+    XCTAssertFalse(fetch.isCancelled);
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(fetch.retrieveTimeout * 0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^
     {
         [fetch cancel];
+        XCTAssertTrue(fetch.isCancelled);
     });
     
     [self waitForExpectationsWithTimeout:(fetch.retrieveTimeout + fetch.transformTimeout) * 2.0 handler:nil];
@@ -153,12 +161,12 @@
 
 - (void)testRetrieveFailure {
     NSError *const error = [NSError errorWithDomain:@"TestDomain" code:11 userInfo:nil];
-    SyncFetch *const fetch = [[SyncFetch alloc] initWithRetrieveResultType:MUKContentFetchStepResultTypeFailed object:nil error:error transformResultType:0 object:nil error:nil];
+    SyncFetch *const fetch = [[SyncFetch alloc] initWithRetrieveResultType:MUKContentFetchResultTypeFailed object:nil error:error transformResultType:0 object:nil error:nil];
     
     XCTestExpectation *completionHandlerExpection = [self expectationWithDescription:@"Completion handler called"];
     
     [fetch startWithCompletionHandler:^(MUKContentFetchResponse *response) {
-        XCTAssertEqual(response.type, MUKContentFetchResponseTypeFailed);
+        XCTAssertEqual(response.resultType, MUKContentFetchResultTypeFailed);
         XCTAssertEqualObjects(response.error, error);
         
         XCTAssert(fetch.retrieveAttempted);
@@ -172,12 +180,12 @@
 
 - (void)testTransformFailure {
     NSError *const error = [NSError errorWithDomain:@"TestDomain" code:11 userInfo:nil];
-    SyncFetch *const fetch = [[SyncFetch alloc] initWithRetrieveResultType:MUKContentFetchStepResultTypeSuccess object:nil error:nil transformResultType:MUKContentFetchStepResultTypeFailed object:nil error:error];
+    SyncFetch *const fetch = [[SyncFetch alloc] initWithRetrieveResultType:MUKContentFetchResultTypeSuccess object:nil error:nil transformResultType:MUKContentFetchResultTypeFailed object:nil error:error];
     
     XCTestExpectation *completionHandlerExpection = [self expectationWithDescription:@"Completion handler called"];
     
     [fetch startWithCompletionHandler:^(MUKContentFetchResponse *response) {
-        XCTAssertEqual(response.type, MUKContentFetchResponseTypeFailed);
+        XCTAssertEqual(response.resultType, MUKContentFetchResultTypeFailed);
         XCTAssertEqualObjects(response.error, error);
         
         XCTAssert(fetch.retrieveAttempted);
@@ -191,12 +199,12 @@
 
 - (void)testTransformSuccess {
     id const object = @"!";
-    SyncFetch *const fetch = [[SyncFetch alloc] initWithRetrieveResultType:MUKContentFetchStepResultTypeSuccess object:object error:nil transformResultType:MUKContentFetchStepResultTypeSuccess object:object error:nil];
+    SyncFetch *const fetch = [[SyncFetch alloc] initWithRetrieveResultType:MUKContentFetchResultTypeSuccess object:object error:nil transformResultType:MUKContentFetchResultTypeSuccess object:object error:nil];
     
     XCTestExpectation *completionHandlerExpection = [self expectationWithDescription:@"Completion handler called"];
     
     [fetch startWithCompletionHandler:^(MUKContentFetchResponse *response) {
-        XCTAssertEqual(response.type, MUKContentFetchResponseTypeSuccess);
+        XCTAssertEqual(response.resultType, MUKContentFetchResultTypeSuccess);
         XCTAssertEqualObjects(response.object, object);
         
         XCTAssert(fetch.retrieveAttempted);

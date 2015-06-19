@@ -2,11 +2,11 @@
 
 @implementation MUKContentFetchResponse
 
-- (instancetype)initWithType:(MUKContentFetchResponseType)type object:(id)object error:(NSError *)error
+- (instancetype)initWithResultType:(MUKContentFetchResultType)resultType object:(id)object error:(NSError *)error
 {
     self = [super init];
     if (self) {
-        _type = type;
+        _resultType = resultType;
         _object = object;
         _error = error;
     }
@@ -15,10 +15,10 @@
 }
 
 - (BOOL)isEqualToContentFetchResponse:(MUKContentFetchResponse *)response {
-    BOOL const sameType = self.type == response.type;
+    BOOL const sameResultType = self.resultType == response.resultType;
     BOOL const sameObject = [self.object isEqual:response.object];
     BOOL const sameError = (!self.error && !response.error) || [self.error isEqual:response.error];
-    return sameType && sameObject && sameError;
+    return sameResultType && sameObject && sameError;
 }
 
 #pragma mark - Overrides
@@ -36,7 +36,7 @@
 }
 
 - (NSUInteger)hash {
-    return 58493 ^ self.type ^ [self.object hash] ^ [self.error hash];
+    return 58493 ^ self.resultType ^ [self.object hash] ^ [self.error hash];
 }
 
 @end
