@@ -1,24 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <MUKContentFetch/MUKContentFetchRequest.h>
 #import <MUKContentFetch/MUKContentFetchResponse.h>
-
-/**
- Result type for an intermediate step of fetch
- */
-typedef NS_ENUM(NSInteger, MUKContentFetchStepResultType) {
-    /**
-     Step failed
-     */
-    MUKContentFetchStepResultTypeFailed     = 0,
-    /**
-     Step success
-     */
-    MUKContentFetchStepResultTypeSuccess    = 1,
-    /**
-     Step cancelled
-     */
-    MUKContentFetchStepResultTypeCancelled  = 2
-};
+#import <MUKContentFetch/MUKContentFetchResultType.h>
 
 /**
  The fetch of a request which leads to a response
@@ -36,6 +19,10 @@ typedef NS_ENUM(NSInteger, MUKContentFetchStepResultType) {
  YES when -startWithCompletionHandler: has been called
  */
 @property (nonatomic, readonly, getter=isStarted) BOOL started;
+/**
+ YES when -cancel has been called
+ */
+@property (nonatomic, readonly, getter=isCancelled) BOOL cancelled;
 /**
  Designated initializer
  */
@@ -63,7 +50,7 @@ typedef NS_ENUM(NSInteger, MUKContentFetchStepResultType) {
  @param completionHandler A block you must call when you finish to retrieve the 
  resource. You can call this block from any queue.
  */
-- (void)retrieveResourceWithCompletionHandler:(void (^)(MUKContentFetchStepResultType resultType, id retrievedObject, NSError *error))completionHandler;
+- (void)retrieveResourceWithCompletionHandler:(void (^)(MUKContentFetchResultType resultType, id retrievedObject, NSError *error))completionHandler;
 /**
  Transform retrieved resource into content object.
  @discussion You have to override this method. You can transform your object how
@@ -71,5 +58,5 @@ typedef NS_ENUM(NSInteger, MUKContentFetchStepResultType) {
  @param completionHandler A block you must call when you finish to transform the
  resource. You can call this block from any queue.
  */
-- (void)transformRetrievedObject:(id)retrievedObject withCompletionHandler:(void (^)(MUKContentFetchStepResultType resultType, id transformedObject, NSError *error))completionHandler;
+- (void)transformRetrievedObject:(id)retrievedObject withCompletionHandler:(void (^)(MUKContentFetchResultType resultType, id transformedObject, NSError *error))completionHandler;
 @end

@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  MUKContentFetch: dce6a23dfcb7436673ad5d4f06b8ae9a691c515b
+  MUKContentFetch: 9ed4915603d77b92effd7103dd17549b6a9ecf52
 
 COCOAPODS: 0.37.2

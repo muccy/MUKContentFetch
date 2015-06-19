@@ -3,6 +3,7 @@
 @interface MUKContentFetch ()
 @property (nonatomic, readwrite) MUKContentFetchResponse *response;
 @property (nonatomic, readwrite, getter=isStarted) BOOL started;
+@property (nonatomic, readwrite, getter=isCancelled) BOOL cancelled;
 @property (nonatomic, copy) void (^completionHandler)(MUKContentFetchResponse *);
 @end
 
@@ -33,25 +34,30 @@
     self.completionHandler = completionHandler;
     
     // I want to keep self in memory
-    [self retrieveResourceWithCompletionHandler:^(MUKContentFetchStepResultType resultType, id retrievedObject, NSError *error)
+    [self retrieveResourceWithCompletionHandler:^(MUKContentFetchResultType resultType, id retrievedObject, NSError *error)
     {
         dispatch_async(dispatch_get_main_queue(), ^{
             switch (resultType) {
-                case MUKContentFetchStepResultTypeSuccess: {
-                    [self transformRetrievedObject:retrievedObject withCompletionHandler:^(MUKContentFetchStepResultType resultType, id transformedObject, NSError *error)
+                case MUKContentFetchResultTypeSuccess: {
+                    [self transformRetrievedObject:retrievedObject withCompletionHandler:^(MUKContentFetchResultType resultType, id transformedObject, NSError *error)
                     {
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [self setResponseAndCallCompletionHandlerIfNeeded:[[MUKContentFetchResponse alloc] initWithType:ResponseTypeFromStepResultType(resultType) object:transformedObject error:error]];
+                            MUKContentFetchResponse *const response = [[MUKContentFetchResponse alloc] initWithResultType:resultType object:transformedObject error:error];
+                            [self setResponseAndCallCompletionHandlerIfNeeded:response];
                         }); // dispatch_async
                     }]; // transformRetrievedObject
                     
                     break;
                 }
                     
-                case MUKContentFetchStepResultTypeFailed:
-                case MUKContentFetchStepResultTypeCancelled:
-                    [self setResponseAndCallCompletionHandlerIfNeeded:[[MUKContentFetchResponse alloc] initWithType:ResponseTypeFromStepResultType(resultType) object:nil error:error]];
+                case MUKContentFetchResultTypeFailed:
+                case MUKContentFetchResultTypeCancelled:
+                {
+                    // Already on main queue
+                    MUKContentFetchResponse *const response = [[MUKContentFetchResponse alloc] initWithResultType:resultType object:nil error:error];
+                    [self setResponseAndCallCompletionHandlerIfNeeded:response];
                     break;
+                }
             
                 default:
                     self.completionHandler = nil;
@@ -62,51 +68,43 @@
 }
 
 - (void)cancel {
-    [self setResponseAndCallCompletionHandlerIfNeeded:[[MUKContentFetchResponse alloc] initWithType:MUKContentFetchResponseTypeCancelled object:nil error:nil]];
+    if ([self canSetResponse]) {
+        self.cancelled = YES;
+        MUKContentFetchResponse *const response = [[MUKContentFetchResponse alloc] initWithResultType:MUKContentFetchResultTypeCancelled object:nil error:nil];
+        [self setResponseAndCallCompletionHandler:response];
+    }
 }
 
-- (void)retrieveResourceWithCompletionHandler:(void (^)(MUKContentFetchStepResultType, id, NSError *))completionHandler
+- (void)retrieveResourceWithCompletionHandler:(void (^)(MUKContentFetchResultType, id, NSError *))completionHandler
 {
     NSAssert(NO, @"You must override -retrieveResourceWithCompletionHandler:");
 }
 
-- (void)transformRetrievedObject:(id)retrievedObject withCompletionHandler:(void (^)(MUKContentFetchStepResultType, id, NSError *))completionHandler
+- (void)transformRetrievedObject:(id)retrievedObject withCompletionHandler:(void (^)(MUKContentFetchResultType, id, NSError *))completionHandler
 {
     NSAssert(NO, @"You must override -transformRetrievedObject:withCompletionHandler:");
 }
 
 #pragma mark - Private
 
-- (void)setResponseAndCallCompletionHandlerIfNeeded:(MUKContentFetchResponse *)response
-{
-    if (!self.response && self.isStarted) {
-        self.response = response;
-        
-        if (self.completionHandler) {
-            self.completionHandler(self.response);
-            self.completionHandler = nil;
-        }
+- (BOOL)canSetResponse {
+    return !self.response && self.isStarted;
+}
+
+- (void)setResponseAndCallCompletionHandler:(MUKContentFetchResponse *)response {
+    self.response = response;
+    
+    if (self.completionHandler) {
+        self.completionHandler(self.response);
+        self.completionHandler = nil;
     }
 }
 
-static MUKContentFetchResponseType ResponseTypeFromStepResultType(MUKContentFetchStepResultType stepResultType)
+- (void)setResponseAndCallCompletionHandlerIfNeeded:(MUKContentFetchResponse *)response
 {
-    MUKContentFetchResponseType responseType;
-    
-    switch (stepResultType) {
-        case MUKContentFetchStepResultTypeCancelled:
-            responseType = MUKContentFetchResponseTypeCancelled;
-            break;
-            
-        case MUKContentFetchStepResultTypeFailed:
-            responseType = MUKContentFetchResponseTypeFailed;
-            break;
-            
-        case MUKContentFetchStepResultTypeSuccess:
-            responseType = MUKContentFetchResponseTypeSuccess;
+    if ([self canSetResponse]) {
+        [self setResponseAndCallCompletionHandler:response];
     }
-    
-    return responseType;
 }
 
 @end
