@@ -5,26 +5,38 @@
       location = "container:"
       name = "Pod">
       <FileRef
-         location = "group:../MUKContentFetchRequest.h">
+         location = "group:../Classes/MUKContentFetchResultType.h">
       </FileRef>
-      <FileRef
-         location = "group:../MUKContentFetchRequest.m">
-      </FileRef>
-      <FileRef
-         location = "group:../MUKContentFetch.h">
-      </FileRef>
-      <FileRef
-         location = "group:../MUKContentFetch.m">
-      </FileRef>
-      <FileRef
-         location = "group:../MUKContentFetchResponse.h">
-      </FileRef>
-      <FileRef
-         location = "group:../MUKContentFetchResponse.m">
-      </FileRef>
-      <FileRef
-         location = "group:../MUKContentFetchResultType.h">
-      </FileRef>
+      <Group
+         location = "group:../Classes/Fetch"
+         name = "Fetch">
+         <FileRef
+            location = "group:MUKContentFetch.h">
+         </FileRef>
+         <FileRef
+            location = "group:MUKContentFetch.m">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:../Classes/Request"
+         name = "Request">
+         <FileRef
+            location = "group:MUKContentFetchRequest.h">
+         </FileRef>
+         <FileRef
+            location = "group:MUKContentFetchRequest.m">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:../Classes/Response"
+         name = "Response">
+         <FileRef
+            location = "group:MUKContentFetchResponse.h">
+         </FileRef>
+         <FileRef
+            location = "group:MUKContentFetchResponse.m">
+         </FileRef>
+      </Group>
    </Group>
    <FileRef
       location = "group:Tests.xcodeproj">
