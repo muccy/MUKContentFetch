@@ -9,19 +9,6 @@
 
 @implementation MUKContentFetch
 
-- (instancetype)initWithRequest:(MUKContentFetchRequest *)request {
-    self = [super init];
-    if (self) {
-        _request = request;
-    }
-    
-    return self;
-}
-
-- (instancetype)init {
-    return [self initWithRequest:[[MUKContentFetchRequest alloc] initWithUserInfo:nil]];
-}
-
 - (void)startWithCompletionHandler:(void (^)(MUKContentFetchResponse *))completionHandler
 {
     // Fetch can be started once

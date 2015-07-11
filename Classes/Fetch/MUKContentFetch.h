@@ -1,20 +1,17 @@
 #import <Foundation/Foundation.h>
-#import <MUKContentFetch/MUKContentFetchRequest.h>
 #import <MUKContentFetch/MUKContentFetchResponse.h>
 #import <MUKContentFetch/MUKContentFetchResultType.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 /**
  The fetch of a request which leads to a response
  */
 @interface MUKContentFetch : NSObject
 /**
- Request to satisfy
- */
-@property (nonatomic, readonly) MUKContentFetchRequest *request;
-/**
  Produced response
  */
-@property (nonatomic, readonly) MUKContentFetchResponse *response;
+@property (nonatomic, readonly, nullable) MUKContentFetchResponse *response;
 /**
  YES when -startWithCompletionHandler: has been called
  */
@@ -23,10 +20,6 @@
  YES when -cancel has been called
  */
 @property (nonatomic, readonly, getter=isCancelled) BOOL cancelled;
-/**
- Designated initializer
- */
-- (instancetype)initWithRequest:(MUKContentFetchRequest *)request;
 /**
  Start fetch
  @param completionHandler A block called on main queue when fetch finished
@@ -50,7 +43,7 @@
  @param completionHandler A block you must call when you finish to retrieve the 
  resource. You can call this block from any queue.
  */
-- (void)retrieveResourceWithCompletionHandler:(void (^)(MUKContentFetchResultType resultType, id retrievedObject, NSError *error))completionHandler;
+- (void)retrieveResourceWithCompletionHandler:(void (^)(MUKContentFetchResultType resultType, id __nullable retrievedObject, NSError *__nullable error))completionHandler;
 /**
  Transform retrieved resource into content object.
  @discussion You have to override this method. You can transform your object how
@@ -58,5 +51,7 @@
  @param completionHandler A block you must call when you finish to transform the
  resource. You can call this block from any queue.
  */
-- (void)transformRetrievedObject:(id)retrievedObject withCompletionHandler:(void (^)(MUKContentFetchResultType resultType, id transformedObject, NSError *error))completionHandler;
+- (void)transformRetrievedObject:(id __nullable)retrievedObject withCompletionHandler:(void (^)(MUKContentFetchResultType resultType, id __nullable transformedObject, NSError *__nullable error))completionHandler;
 @end
+
+NS_ASSUME_NONNULL_END
