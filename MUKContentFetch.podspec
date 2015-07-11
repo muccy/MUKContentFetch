@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "MUKContentFetch"
-  s.version          = "1.1.0"
+  s.version          = "1.2.0"
   s.summary          = "Retrieve data and transform it to content objects"
   s.description      = "A simple infrastracture to retrieve requested data and transform it to content object"
   s.homepage         = "https://github.com/muccy/MUKContentFetch"
@@ -11,5 +11,5 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '7.0'
   s.requires_arc = true
 
-  s.source_files = '*.{h,m}'
+  s.source_files = 'Classes/**/*.{h,m}'
 end

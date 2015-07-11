@@ -95,16 +95,7 @@
 @implementation MUKContentFetchTests
 
 - (void)testInitialization {
-    MUKContentFetchRequest *request = [[MUKContentFetchRequest alloc] initWithUserInfo:@{ @"key" : @"value" }];
-    MUKContentFetch *fetch = [[MUKContentFetch alloc] initWithRequest:request];
-    XCTAssertEqualObjects(fetch.request, request);
-    XCTAssertNil(fetch.response);
-    XCTAssertFalse(fetch.isStarted);
-    XCTAssertFalse(fetch.isCancelled);
-
-    request = [[MUKContentFetchRequest alloc] initWithUserInfo:nil];
-    fetch = [[MUKContentFetch alloc] init];
-    XCTAssertEqualObjects(fetch.request, request);
+    MUKContentFetch *fetch = [[MUKContentFetch alloc] init];
     XCTAssertNil(fetch.response);
     XCTAssertFalse(fetch.isStarted);
     XCTAssertFalse(fetch.isCancelled);

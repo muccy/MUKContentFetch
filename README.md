@@ -9,13 +9,7 @@ A simple infrastracture to retrieve requested data and transform it to content o
 
 ## Usage
 
-Say you want to get and parse a JSON resource to show its entries inside a table view.
-
-```objective-c
-MUKContentFetchRequest *request = [[MUKContentFetchRequest alloc] initWithUserInfo:@{ MUKContentFetchRequestIntentUserInfoKey : MUKContentFetchRequestIntentOverwrite }];
-```
-	
-You should isolate that fetch in a dedicated class not to pollute you view controller.
+Say you want to get and parse a JSON resource to show its entries inside a table view. You should isolate that fetch in a dedicated class not to pollute you view controller.
 
 ```objective-c
 @interface DucksFetch : MUKContentFetch
@@ -45,7 +39,7 @@ You should isolate that fetch in a dedicated class not to pollute you view contr
 To get data is now simple and clean.
 
 ```objective-c
-DucksFetch *fetch = [[DucksFetch alloc] initWithRequest:request];
+DucksFetch *fetch = [[DucksFetch alloc] init];
 [fetch startWithCompletionHandler:^(MUKContentFetchResponse *response) {
 	self.ducks = response.object;
 	[self updateUI];
