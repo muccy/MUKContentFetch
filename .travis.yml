@@ -1,3 +1,6 @@
 language: objective-c
 xcode_workspace: Tests/Tests.xcworkspace
 xcode_scheme: MUKContentFetchTests
+notifications:
+  email: false
+  
