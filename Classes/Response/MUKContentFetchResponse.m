@@ -23,6 +23,10 @@
 
 #pragma mark - Overrides
 
+- (instancetype)init {
+    return [self initWithResultType:MUKContentFetchResultTypeCancelled object:nil error:nil];
+}
+
 - (BOOL)isEqual:(id)object {
     if (self == object) {
         return YES;
