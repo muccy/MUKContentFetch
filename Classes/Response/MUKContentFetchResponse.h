@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Designated initializer
  */
-- (instancetype)initWithResultType:(MUKContentFetchResultType)resultType object:(nullable id)object error:(nullable NSError *)error NS_DESIGNATED_INITALIZER;
+- (instancetype)initWithResultType:(MUKContentFetchResultType)resultType object:(nullable id)object error:(nullable NSError *)error NS_DESIGNATED_INITIALIZER;
 /**
  @returns YES when response is equal to self
  */
