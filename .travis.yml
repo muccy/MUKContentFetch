@@ -1,4 +1,5 @@
 language: objective-c
+osx_image: xcode7
 xcode_workspace: Tests/Tests.xcworkspace
 xcode_scheme: MUKContentFetchTests
 notifications:
