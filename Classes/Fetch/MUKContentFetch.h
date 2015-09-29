@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param completionHandler A block you must call when you finish to retrieve the 
  resource. You can call this block from any queue.
  */
-- (void)retrieveResourceWithCompletionHandler:(void (^)(MUKContentFetchResultType resultType, id __nullable retrievedObject, NSError *__nullable error))completionHandler;
+- (void)retrieveResourceWithCompletionHandler:(void (^)(MUKContentFetchResultType resultType, id _Nullable retrievedObject, NSError * _Nullable error))completionHandler;
 /**
  Transform retrieved resource into content object.
  @discussion You have to override this method. You can transform your object how
@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param completionHandler A block you must call when you finish to transform the
  resource. You can call this block from any queue.
  */
-- (void)transformRetrievedObject:(id __nullable)retrievedObject withCompletionHandler:(void (^)(MUKContentFetchResultType resultType, id __nullable transformedObject, NSError *__nullable error))completionHandler;
+- (void)transformRetrievedObject:(nullable id)retrievedObject withCompletionHandler:(void (^)(MUKContentFetchResultType resultType, id _Nullable transformedObject, NSError *_Nullable error))completionHandler;
 @end
 
 NS_ASSUME_NONNULL_END

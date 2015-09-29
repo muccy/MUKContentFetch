@@ -1,6 +1,8 @@
 #import <Foundation/Foundation.h>
 #import <MUKContentFetch/MUKContentFetchResultType.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  Result of a fetch
  */
@@ -12,17 +14,19 @@
 /**
  Fetched object
  */
-@property (nonatomic, readonly) id object;
+@property (nonatomic, readonly, nullable) id object;
 /**
  Fetch error
  */
-@property (nonatomic, readonly) NSError *error;
+@property (nonatomic, readonly, nullable) NSError *error;
 /**
  Designated initializer
  */
-- (instancetype)initWithResultType:(MUKContentFetchResultType)resultType object:(id)object error:(NSError *)error;
+- (instancetype)initWithResultType:(MUKContentFetchResultType)resultType object:(nullable id)object error:(nullable NSError *)error;
 /**
  @returns YES when response is equal to self
  */
 - (BOOL)isEqualToContentFetchResponse:(MUKContentFetchResponse *)response;
 @end
+
+NS_ASSUME_NONNULL_END
