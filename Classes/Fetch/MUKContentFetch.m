@@ -9,7 +9,7 @@
 
 @implementation MUKContentFetch
 
-- (void)startWithCompletionHandler:(void (^)(MUKContentFetchResponse *))completionHandler
+- (void)startWithCompletionHandler:(void (^)(MUKContentFetchResponse<id> * _Nonnull))completionHandler
 {
     // Fetch can be started once
     if (self.isStarted) {
