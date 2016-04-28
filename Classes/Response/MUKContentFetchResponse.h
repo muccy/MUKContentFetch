@@ -6,7 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Result of a fetch
  */
-@interface MUKContentFetchResponse : NSObject
+@interface MUKContentFetchResponse<__covariant ObjectType> : NSObject
 /**
  Result type
  */
@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Fetched object
  */
-@property (nonatomic, readonly, nullable) id object;
+@property (nonatomic, readonly, nullable) ObjectType object;
 /**
  Fetch error
  */
@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Designated initializer
  */
-- (instancetype)initWithResultType:(MUKContentFetchResultType)resultType object:(nullable id)object error:(nullable NSError *)error NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithResultType:(MUKContentFetchResultType)resultType object:(nullable ObjectType)object error:(nullable NSError *)error NS_DESIGNATED_INITIALIZER;
 /**
  @returns YES when response is equal to self
  */

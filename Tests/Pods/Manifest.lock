@@ -1,0 +1,14 @@
+PODS:
+  - MUKContentFetch (1.1.0)
+
+DEPENDENCIES:
+  - MUKContentFetch (from `../`)
+
+EXTERNAL SOURCES:
+  MUKContentFetch:
+    :path: ../
+
+SPEC CHECKSUMS:
+  MUKContentFetch: 7929b3a0fdd1a865cfa88aaf58cea1a29f36e997
+
+COCOAPODS: 0.37.2

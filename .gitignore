@@ -19,4 +19,4 @@ DerivedData
 *.xccheckout
 
 # Cocoapods
-Pods
+# Pods			# Commented out because of Travis CI
