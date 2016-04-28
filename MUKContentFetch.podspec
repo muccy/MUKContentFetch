@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "MUKContentFetch"
-  s.version          = "1.3.1"
+  s.version          = "1.3.2"
   s.summary          = "Retrieve data and transform it to content objects"
   s.description      = "A simple infrastracture to retrieve requested data and transform it to content object"
   s.homepage         = "https://github.com/muccy/MUKContentFetch"

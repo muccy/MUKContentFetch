@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
  Start fetch
  @param completionHandler A block called on main queue when fetch finished
  */
-- (void)startWithCompletionHandler:(void (^)(MUKContentFetchResponse *response))completionHandler;
+- (void)startWithCompletionHandler:(void (^)(MUKContentFetchResponse<ObjectType> *response))completionHandler;
 /*
  Cancel started fetch
  @discussion You can override this method to cancel started operations, if any, but
@@ -37,9 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
  is properly called and response is set.
  */
 - (void)cancel;
-@end
 
-@interface MUKContentFetch (MethodsToOverride)
+#pragma mark Methods to override
+
 /**
  Retrieve requested resource.
  @discussion You have to override this method. You can retrieve your resource how
@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param completionHandler A block you must call when you finish to transform the
  resource. You can call this block from any queue.
  */
-- (void)transformRetrievedObject:(nullable id)retrievedObject withCompletionHandler:(void (^)(MUKContentFetchResultType resultType, id _Nullable transformedObject, NSError *_Nullable error))completionHandler;
+- (void)transformRetrievedObject:(nullable id)retrievedObject withCompletionHandler:(void (^)(MUKContentFetchResultType resultType, ObjectType _Nullable transformedObject, NSError *_Nullable error))completionHandler;
 @end
 
 NS_ASSUME_NONNULL_END
