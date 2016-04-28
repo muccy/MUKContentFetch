@@ -12,7 +12,7 @@ A simple infrastracture to retrieve requested data and transform it to content o
 Say you want to get and parse a JSON resource to show its entries inside a table view. You should isolate that fetch in a dedicated class not to pollute you view controller.
 
 ```objective-c
-@interface DucksFetch : MUKContentFetch
+@interface DucksFetch : MUKContentFetch<NSArray<Duck *> *>
 @end
 
 @implementation DucksFetch
