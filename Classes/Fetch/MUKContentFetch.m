@@ -72,10 +72,22 @@
     NSAssert(NO, @"You must override -transformRetrievedObject:withCompletionHandler:");
 }
 
+#pragma mark - Accessors
+
+- (BOOL)isRunning {
+    return self.isStarted && !self.response;
+}
+
+#pragma mark - KVO
+
++ (NSSet *)keyPathsForValuesAffectingRunning {
+    return [NSSet setWithObjects:@"started", NSStringFromSelector(@selector(response)), nil];
+}
+
 #pragma mark - Private
 
 - (BOOL)canSetResponse {
-    return !self.response && self.isStarted;
+    return self.isRunning;
 }
 
 - (void)setResponseAndCallCompletionHandler:(MUKContentFetchResponse *)response {

@@ -7,11 +7,11 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The fetch of a request which leads to a response
  */
-@interface MUKContentFetch : NSObject
+@interface MUKContentFetch<__covariant ObjectType> : NSObject
 /**
  Produced response
  */
-@property (nonatomic, readonly, nullable) MUKContentFetchResponse *response;
+@property (nonatomic, readonly, nullable) MUKContentFetchResponse<ObjectType> *response;
 /**
  YES when -startWithCompletionHandler: has been called
  */
@@ -20,6 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
  YES when -cancel has been called
  */
 @property (nonatomic, readonly, getter=isCancelled) BOOL cancelled;
+/**
+ YES when this fetch is started but not finished
+ */
+@property (nonatomic, readonly, getter=isRunning) BOOL running;
 /**
  Start fetch
  @param completionHandler A block called on main queue when fetch finished
