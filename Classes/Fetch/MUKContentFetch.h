@@ -29,6 +29,13 @@ NS_ASSUME_NONNULL_BEGIN
  @param completionHandler A block called on main queue when fetch finished
  */
 - (void)startWithCompletionHandler:(void (^)(MUKContentFetchResponse<ObjectType> *response))completionHandler;
+/**
+ Start fetch
+ @param target The object which is invoked at completion. This object is not
+ retained.
+ @param action The selector invoked on target at completion.
+ */
+- (void)startWithCompletionTarget:(id __weak)target action:(SEL)action;
 /*
  Cancel started fetch
  @discussion You can override this method to cancel started operations, if any, but

@@ -54,6 +54,13 @@
     }]; // retrieveResourceWithCompletionHandler
 }
 
+- (void)startWithCompletionTarget:(__weak id)target action:(SEL)action {
+    [self startWithCompletionHandler:^(MUKContentFetchResponse * _Nonnull response) {
+        __strong __typeof__(target) strongTarget = target;
+        [strongTarget performSelector:action withObject:response];
+    }];
+}
+
 - (void)cancel {
     if ([self canSetResponse]) {
         self.cancelled = YES;
