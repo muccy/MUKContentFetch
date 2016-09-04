@@ -90,6 +90,8 @@
 #pragma mark -
 
 @interface MUKContentFetchTests : XCTestCase
+@property (nonatomic) NSUInteger counter;
+@property (nonatomic) MUKContentFetchResponse *response;
 @end
 
 @implementation MUKContentFetchTests
@@ -205,6 +207,59 @@
     }];
     
     [self waitForExpectationsWithTimeout:1.0 handler:nil];
+}
+
+- (void)testCompletionTargetAction {
+    { // Without parameters
+        NSUInteger const expectedCounter = self.counter + 1;
+        
+        SyncFetch *const fetch = [[SyncFetch alloc] initWithRetrieveResultType:MUKContentFetchResultTypeSuccess object:@"" error:nil transformResultType:MUKContentFetchResultTypeSuccess object:@"" error:nil];
+        [fetch startWithCompletionTarget:self action:@selector(incrementCounter)];
+        
+        XCTestExpectation *completionExpection = [self expectationWithDescription:@"Completion reached"];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^
+        {
+            XCTAssertEqual(self.counter, expectedCounter);
+            
+            XCTAssert(fetch.retrieveAttempted);
+            XCTAssert(fetch.transformAttempted);
+            
+            [completionExpection fulfill];
+        });
+        
+        [self waitForExpectationsWithTimeout:1.0 handler:nil];
+    }
+    
+    { // Passing a parameter
+        id const object = @"!";
+        SyncFetch *const fetch = [[SyncFetch alloc] initWithRetrieveResultType:MUKContentFetchResultTypeSuccess object:object error:nil transformResultType:MUKContentFetchResultTypeSuccess object:object error:nil];
+        
+        XCTestExpectation *completionExpection = [self expectationWithDescription:@"Completion reached"];
+        
+        [fetch startWithCompletionTarget:self action:@selector(fetchDidFinishWithResponse:)];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^
+        {
+            XCTAssertEqual(self.response.resultType, MUKContentFetchResultTypeSuccess);
+            XCTAssertEqualObjects(self.response.object, object);
+            
+            XCTAssert(fetch.retrieveAttempted);
+            XCTAssert(fetch.transformAttempted);
+            
+            [completionExpection fulfill];
+        });
+        
+        [self waitForExpectationsWithTimeout:1.0 handler:nil];
+    }
+}
+
+- (void)incrementCounter {
+    self.counter++;
+}
+
+- (void)fetchDidFinishWithResponse:(MUKContentFetchResponse *)response {
+    self.response = response;
 }
 
 @end
