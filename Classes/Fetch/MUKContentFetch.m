@@ -57,7 +57,23 @@
 - (void)startWithCompletionTarget:(__weak id)target action:(SEL)action {
     [self startWithCompletionHandler:^(MUKContentFetchResponse * _Nonnull response) {
         __strong __typeof__(target) strongTarget = target;
-        [strongTarget performSelector:action withObject:response];
+        
+        // Prevent leaks warning by using invocation
+        // http://stackoverflow.com/a/28276187/224629
+        NSMethodSignature *const signature = [strongTarget methodSignatureForSelector:action];
+        
+        if (signature) {
+            NSInvocation *const invocation = [NSInvocation
+                                           invocationWithMethodSignature:signature];
+            invocation.target = strongTarget;
+            invocation.selector = action;
+            
+            if (signature.numberOfArguments > 2) {
+                [invocation setArgument:&response atIndex:2];
+            }
+            
+            [invocation invoke];
+        }
     }];
 }
 
